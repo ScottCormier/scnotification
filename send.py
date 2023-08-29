@@ -129,9 +129,9 @@ class Send:
         :param response: requests
         :return: bool
         """
-        if response.status_code == 400:
-            return False
-        return True
+        if response.status_code == 200:
+            return True
+        return False
 
     def warning(self, title: str, failed: list, color=None):
         response = self._warning(title, failed, color)
