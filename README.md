@@ -115,5 +115,6 @@ for message in range(0, 10):
 ```
 
 # Known Issues/bugs
-* Trying to use `notify.send.error()` and pass a list as the message results in a weirdly formatted batch message
+~~* Trying to use `Notify().send.error()` and pass a list as the message results in a weirdly formatted batch message~~
+* `Notify().send.filters.append(list())` nests the list into the filters list use `Notify().send.filters.extends(list())`
 
