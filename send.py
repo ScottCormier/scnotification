@@ -1,9 +1,9 @@
 import requests
 
 
-class Send:
+class Slack:
     def __init__(self, config):
-        super(Send, self).__init__()
+        super(Slack, self).__init__()
 
         self.url = config["url"]
         self.headers = {'Content-Type': 'application/json'}
@@ -133,7 +133,7 @@ class Send:
         """
         if not color:
             color = self.colors["warning"]
-        response = self.messages(title, warnings, color)
+        response = self.message(title, warnings, color)
         return response
 
     def error(self, title: str, errors: list | str, color=None) -> requests.models.Response | str:
@@ -146,20 +146,10 @@ class Send:
         """
         if not color:
             color = self.colors["danger"]
-        response = self.messages(title, errors, color)
+        response = self.message(title, errors, color)
         return response
 
-    def message(self, title: str, message: str, color=None) -> requests.models.Response | str:
-        """
-        Passes a str message to the messaging function
-        :param title: str
-        :param message: str
-        :param color: None
-        :return: response
-        """
-        return self.messages(title, message, color)
-
-    def messages(self, title: str, messages: list | str, color=None) -> requests.models.Response | str:
+    def message(self, title: str, messages: list | str, color=None) -> requests.models.Response | str:
         """
         Main handling function that is responsible for building, validating, and sending the payloads.
         :param title: str
@@ -180,7 +170,7 @@ class Send:
                 filter_message = []
                 for filtered_message in filtered:
                     filter_message.append("Filtered character {} from message".format(repr(filtered_message)))
-                self.messages("Warning", filter_message)
+                self.message("Warning", filter_message)
 
         if not color:
             color = self.colors["default"]
@@ -195,5 +185,5 @@ class Send:
         response = self._send(payload)
 
         if not self._validate_response(response) and self.post_errors:
-            self.messages("Error sending messages:", messages)
+            self.message("Error sending messages:", messages)
         return response
