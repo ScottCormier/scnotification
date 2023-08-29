@@ -53,7 +53,7 @@ Once you've declared some channels in the config, you should be able to send mes
 
 ## Usages
 ```python
-from scnotification.slack import Notify
+from slack import Notify
 
 # Initialize the notification and set the channel to send to
 notify = Notify(channel="MayaServer")
