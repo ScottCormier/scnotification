@@ -146,7 +146,7 @@ class Send:
         :return: response
         """
         if not self.post_warnings:
-            return
+            return "Warnings are not enabled in this channels config, enable 'post_warnings' to see warning notifications"
 
         messages = []
         if isinstance(failed, list):
@@ -175,7 +175,7 @@ class Send:
         :return: response
         """
         if not self.post_errors:
-            return
+            return "Errors are not enabled in this channels config, enable 'post_errors' to see error notifications"
 
         messages = []
         if isinstance(failed, list):
@@ -207,6 +207,7 @@ class Send:
         :param color: None
         :return: response
         """
+
         if isinstance(messages, str):
             return self.message(title, messages, color)
 
@@ -226,6 +227,9 @@ class Send:
         else:
             if color in self.colors.keys():
                 color = self.colors[color]
+
+        if not len(messages) > 0:
+            return "Filtered messages resulted in 0 messages to send, ending notification request early"
 
         payload = self._build(title, messages, color)
         response = self._send(payload)
@@ -257,6 +261,9 @@ class Send:
             if len(filtered) > 0 and self.post_warnings:
                 for filtered_message in filtered:
                     self._warning("Warning:", ["Filtered character {} from message".format(repr(filtered_message))])
+
+        if not len(message) > 0:
+            return "Filtered messages resulted in 0 messages to send, ending notification request early"
 
         payload = self._build(title, [message][0], color)
         response = self._send(payload)
