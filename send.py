@@ -51,16 +51,6 @@ class Send:
         """
         return [{"type": "header", "text": self._get_text(title)}]
 
-    def _get_attachment(self, message: str, color: str) -> dict:
-        """
-        Gets the attachment for a string message
-        :param message:
-        :param color:
-        :return:
-        """
-        filled_templates = self._get_section(message)
-        return {"color": color, "blocks": [filled_templates]}
-
     def _get_attachments(self, messages: list, color: str) -> dict:
         """
         Gets the attachments for a list of messages
@@ -188,13 +178,13 @@ class Send:
             color = self.colors["danger"]
 
         title = self._get_header(title)
-        attachment = self._get_attachment(",".join(messages), color)
+        attachment = self._get_attachments(messages, color)
         payload = {"blocks": title, "attachments": [attachment]}
         response = self._send(payload)
 
         if not self._validate_response(response):
             title = self._get_header("Notification error on error notification")
-            attachment = self._get_attachment("Error notification: <Response[{}]>".format(response.status_code), color)
+            attachment = self._get_attachments("Error notification: <Response[{}]>".format(response.status_code), color)
             payload = {"blocks": title, "attachments": [attachment]}
             response = self._send(payload)
         return response
