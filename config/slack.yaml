@@ -1,0 +1,49 @@
+Channels:
+  Default:
+    url: &url "{INCOMING WEBHOOKS URL}"
+    attributes: &attributes
+      verbose: False # Verbose toggle, used for validating if all messages should be sent
+      post_errors: False # Error toggle, used to control if errors should be sent
+      post_warnings: False # Warning toggle, used to control if warnings should be sent
+      filter_messages: True # Filter toggle, used to control if messages will be filterd
+      colors: &colors # Color dict, declares the human-readable -> hex values, others can be added here if needed
+        default: "#0275d8"
+        success: "#5cb85c"
+        info: "#5bc0de"
+        warning: "#f0ad4e"
+        danger: "#C83E2D"
+      filters: &filters [ "{}", "\n", "sync" ] # Filter list, list of messages to ignore
+
+  # Example of implementing a slack channel, with just the defaults
+  Sync:
+    url: *url
+    attributes:
+      <<: *attributes
+      colors:
+        <<: *colors
+      filters: *filters
+
+  # Example of implementing a slack channel, with some behaviour overrides
+  Logging:
+    url: *url
+    attributes:
+      <<: *attributes
+      verbose: True
+      post_errors: True
+      post_warnings: True
+      colors:
+        <<: *colors
+      filters: *filters
+
+
+  # Example of a slack channel with attribute overrides
+  MayaServer:
+    url: "{DIFFERENT INCOMING WEBHOOKS URL}"
+    attributes:
+      <<: *attributes
+      verbose: True
+      post_errors: True
+      post_warnings: True
+      colors:
+        <<: *colors
+      filters: *filters
