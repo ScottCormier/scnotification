@@ -123,73 +123,19 @@ class Send:
             return True
         return False
 
-    def warning(self, title: str, failed: list, color=None):
-        response = self._warning(title, failed, color)
-        return response
-
-    def _warning(self, title: str, failed: list, color=None):
-        """
-        Sends a warning notification to the platform
-        :param title: str
-        :param failed: list
-        :param color: None
-        :return: response
-        """
-        if not self.post_warnings:
-            return "Warnings are not enabled in this channels config, enable 'post_warnings' to see warning notifications"
-
-        messages = []
-        if isinstance(failed, list):
-            for failure in failed:
-                messages.append(str(failure))
-        else:
-            messages.append(str(failed))
-
+    def warning(self, title: str, warnings: list | str, color=None) -> requests.models.Response | str:
         if not color:
             color = self.colors["warning"]
-
-        payload = self._build(title, messages, color)
-        response = self._send(payload)
+        response = self.messages(title, warnings, color)
         return response
 
-    def error(self, title: str, failed: list, color=None):
-        response = self._error(title, failed, color)
-        return response
-
-    def _error(self, title: str, failed: list, color=None):
-        """
-        Sends an error notification to the platform
-        :param title: str
-        :param failed: list
-        :param color: None
-        :return: response
-        """
-        if not self.post_errors:
-            return "Errors are not enabled in this channels config, enable 'post_errors' to see error notifications"
-
-        messages = []
-        if isinstance(failed, list):
-            for failure in failed:
-                messages.append("{}\n".format(str(failure)))
-        else:
-            messages.append(str(failed))
-
+    def error(self, title: str, errors: list | str, color=None) -> requests.models.Response | str:
         if not color:
             color = self.colors["danger"]
-
-        title = self._get_header(title)
-        attachment = self._get_attachments(messages, color)
-        payload = {"blocks": title, "attachments": [attachment]}
-        response = self._send(payload)
-
-        if not self._validate_response(response):
-            title = self._get_header("Notification error on error notification")
-            attachment = self._get_attachments("Error notification: <Response[{}]>".format(response.status_code), color)
-            payload = {"blocks": title, "attachments": [attachment]}
-            response = self._send(payload)
+        response = self.messages(title, errors, color)
         return response
 
-    def messages(self, title: str, messages: list, color=None):
+    def messages(self, title: str, messages: list | str, color=None) -> requests.models.Response | str:
         """
         Sends a list of strings to the notification platform
         :param title: str
@@ -199,7 +145,7 @@ class Send:
         """
 
         if isinstance(messages, str):
-            return self.message(title, messages, color)
+            messages = [messages]
 
         # recursively flatten message list to a list of strings
         messages = self._flatten_list(messages)
@@ -210,7 +156,8 @@ class Send:
                 filter_message = []
                 for filtered_message in filtered:
                     filter_message.append("Filtered character {} from message".format(repr(filtered_message)))
-                    self._warning("Warning:", filter_message)
+                    print(filter_message)
+                self.messages("Warning", filter_message)
 
         if not color:
             color = self.colors["default"]
@@ -225,10 +172,10 @@ class Send:
         response = self._send(payload)
 
         if not self._validate_response(response) and self.post_errors:
-            self._error("Error sending messages:", messages)
+            self.messages("Error sending messages:", messages)
         return response
 
-    def message(self, title: str, message: str, color=None):
+    def message(self, title: str, message: str, color=None) -> requests.models.Response | str:
         """
         Sends a single message string to the notification platform
         :param title: str
@@ -236,25 +183,4 @@ class Send:
         :param color: None
         :return: response
         """
-
-        if isinstance(message, list):
-            return self.messages(title, message, color)
-
-        if not color:
-            color = self.colors["default"]
-        else:
-            if color in self.colors.keys():
-                color = self.colors[color]
-
-        if self.filter_messages:
-            message, filtered = self._filter_messages([message])
-            if len(filtered) > 0 and self.post_warnings:
-                for filtered_message in filtered:
-                    self._warning("Warning:", ["Filtered character {} from message".format(repr(filtered_message))])
-
-        if not len(message) > 0:
-            return "Filtered messages resulted in 0 messages to send, ending notification request early"
-
-        payload = self._build(title, [message][0], color)
-        response = self._send(payload)
-        return response
+        return self.messages(title, message, color)
