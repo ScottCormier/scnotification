@@ -27,7 +27,8 @@ class Slack:
         messages = self._get_attachments(messages, color)
         return {"blocks": title, "attachments": [messages]}
 
-    def _get_text(self, text: str) -> dict:
+    def _get_text(self, text):
+        # type: (str) -> dict
         """
         Takes a text input and returns a filled text template.
         :param text:
@@ -35,7 +36,8 @@ class Slack:
         """
         return {"type": "plain_text", "text": text}
 
-    def _get_section(self, text: str) -> dict:
+    def _get_section(self, text):
+        # type: (str) -> dict
         """
         Takes a text input and returns a filled section template.
         :param text: str
@@ -43,7 +45,8 @@ class Slack:
         """
         return {"type": "section", "text": self._get_text(text)}
 
-    def _get_header(self, title: str) -> list:
+    def _get_header(self, title):
+        # type: (str) -> list
         """
         Takes the title and returns a filled header template
         :param title: str
@@ -51,7 +54,8 @@ class Slack:
         """
         return [{"type": "header", "text": self._get_text(title)}]
 
-    def _get_attachments(self, messages: list, color: str) -> dict:
+    def _get_attachments(self, messages, color):
+        # type: (list, str) -> dict
         """
         Gets the attachments for a list of messages
         :param messages:
@@ -63,7 +67,8 @@ class Slack:
             filled_templates.append(self._get_section(message))
         return {"color": color, "blocks": filled_templates}
 
-    def _flatten_list(self, messages: list) -> list:
+    def _flatten_list(self, messages):
+        # type: (list) -> list
         """
         Recursively flattens a list down to a list of strings
         :param messages: list
@@ -77,7 +82,8 @@ class Slack:
                 flat_messages.append(str(message))
         return flat_messages
 
-    def _filter_messages(self, messages: list) -> list:
+    def _filter_messages(self, messages):
+        # type: (list) -> list
         """
         Filters message lists, notifies with a warning if warning posts are True
         :param messages: list
@@ -92,12 +98,14 @@ class Slack:
             valid.append(message)
         return [valid, invalid]
 
-    def _validate_message(self, message: str) -> bool:
+    def _validate_message(self, message):
+        # type: (str) -> bool
         if message in self.filters:
             return False
         return True
 
-    def _send(self, payload: dict, url=None, headers=None):
+    def _send(self, payload, url=None, headers=None):
+        # type: (dict, str, dict) -> requests.models.Response
         """
         Sends a payload to the platform url
         :param payload: dict
@@ -123,7 +131,8 @@ class Slack:
             return True
         return False
 
-    def warning(self, title: str, warnings, color=None):
+    def warning(self, title, warnings, color=None):
+        # type: (str, list | str, str) -> requests.models.Response | str
         """
         Passes a str or list of warnings to the messaging function
         :param title: str
@@ -136,7 +145,8 @@ class Slack:
         response = self.message(title, warnings, color)
         return response
 
-    def error(self, title: str, errors, color=None):
+    def error(self, title, errors, color=None):
+        # type: (str, list | str, str) -> requests.models.Response | str
         """
         Passes a str or list of errors to the messaging function
         :param title: str
@@ -149,7 +159,8 @@ class Slack:
         response = self.message(title, errors, color)
         return response
 
-    def message(self, title: str, messages, color=None):
+    def message(self, title, messages, color=None):
+        # type: (str, list | str, str) -> requests.models.Response | str
         """
         Main handling function that is responsible for building, validating, and sending the payloads.
         :param title: str
