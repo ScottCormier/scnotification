@@ -1,9 +1,9 @@
 import requests
 
 
-class Slack:
+class Send:
     def __init__(self, config):
-        super(Slack, self).__init__()
+        super(Send, self).__init__()
 
         self.url = config["url"]
         self.headers = {'Content-Type': 'application/json'}
@@ -113,7 +113,6 @@ class Slack:
         :param headers: None
         :return: response
         """
-        # print(payload)
         if not url:
             url = self.url
         if not headers:
@@ -176,7 +175,7 @@ class Slack:
         if isinstance(messages, str):
             messages = [messages]
 
-        # recursively flatten message list to a list of strings
+        # recursively flatten message lists to a single list of strings
         messages = self._flatten_list(messages)
 
         if self.filter_messages:
