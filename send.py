@@ -140,6 +140,8 @@ class Slack:
         :param color: None
         :return: response
         """
+        if not self.post_warnings:
+            return "Warnings are not being posted to this channel, enable post_warnings in the channel config."
         if not color:
             color = self.colors["warning"]
         response = self.message(title, warnings, color)
@@ -154,6 +156,8 @@ class Slack:
         :param color: None
         :return: response
         """
+        if not self.post_errors:
+            return "Errors are not being posted to this channel, enable post_errors in the channel config."
         if not color:
             color = self.colors["danger"]
         response = self.message(title, errors, color)
@@ -190,7 +194,7 @@ class Slack:
                 color = self.colors[color]
 
         if not len(messages) > 0:
-            return "Filtered messages resulted in 0 messages to send, ending notification request early"
+            return "Filtered messages resulted in 0 messages to send, ending notification request early."
 
         payload = self._build(title, messages, color)
         response = self._send(payload)
