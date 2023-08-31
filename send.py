@@ -123,7 +123,7 @@ class Slack:
             return True
         return False
 
-    def warning(self, title: str, warnings: list | str, color=None) -> requests.models.Response | str:
+    def warning(self, title: str, warnings, color=None):
         """
         Passes a str or list of warnings to the messaging function
         :param title: str
@@ -136,7 +136,7 @@ class Slack:
         response = self.message(title, warnings, color)
         return response
 
-    def error(self, title: str, errors: list | str, color=None) -> requests.models.Response | str:
+    def error(self, title: str, errors, color=None):
         """
         Passes a str or list of errors to the messaging function
         :param title: str
@@ -149,7 +149,7 @@ class Slack:
         response = self.message(title, errors, color)
         return response
 
-    def message(self, title: str, messages: list | str, color=None) -> requests.models.Response | str:
+    def message(self, title: str, messages, color=None):
         """
         Main handling function that is responsible for building, validating, and sending the payloads.
         :param title: str
