@@ -3,8 +3,8 @@ Channels:
     url: &url "{INCOMING WEBHOOKS URL}"
     attributes: &attributes
       verbose: False # Verbose toggle, used for validating if all messages should be sent
-      post_errors: False # Error toggle, used to control if errors should be sent
-      post_warnings: False # Warning toggle, used to control if warnings should be sent
+      send_errors: False # Error toggle, used to control if errors should be sent
+      send_warnings: False # Warning toggle, used to control if warnings should be sent
       filter_messages: True # Filter toggle, used to control if messages will be filterd
       colors: &colors # Color dict, declares the human-readable -> hex values, others can be added here if needed
         default: "#0275d8"
@@ -29,8 +29,8 @@ Channels:
     attributes:
       <<: *attributes
       verbose: True
-      post_errors: True
-      post_warnings: True
+      send_errors: True
+      send_warnings: True
       colors:
         <<: *colors
       filters: *filters
@@ -41,9 +41,9 @@ Channels:
     url: "{DIFFERENT INCOMING WEBHOOKS URL}"
     attributes:
       <<: *attributes
-      verbose: True
-      post_errors: True
-      post_warnings: True
+      verbose: False
+      send_errors: True
+      send_warnings: True
       colors:
         <<: *colors
       filters: *filters

@@ -1,7 +1,7 @@
 import os
 import yaml
 
-from send import Slack
+from send import Send
 
 
 class Config:
@@ -29,4 +29,4 @@ class Notify(Config):
             channel = "Default"
         super(Notify, self).__init__(channel=channel)
         config = self.get_config()
-        self.slack = Slack(config)
+        self.send = Send(config)
