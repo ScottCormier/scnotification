@@ -9,8 +9,8 @@ class Slack:
         self.headers = {'Content-Type': 'application/json'}
 
         self.verbose = config["attributes"]["verbose"]
-        self.post_errors = config["attributes"]["post_errors"]
-        self.post_warnings = config["attributes"]["post_warnings"]
+        self.send_errors = config["attributes"]["send_errors"]
+        self.send_warnings = config["attributes"]["send_warnings"]
         self.colors = config["attributes"]["colors"]
         self.filter_messages = config["attributes"]["filter_messages"]
         self.filters = config["attributes"]["filters"]
@@ -79,7 +79,7 @@ class Slack:
 
     def _filter_messages(self, messages: list) -> list:
         """
-        Filters message lists, notifies with a warning if warning posts are True
+        Filters message lists, notifies with a warning if warning sends are True
         :param messages: list
         :return: list
         """
@@ -131,8 +131,8 @@ class Slack:
         :param color: None
         :return: response
         """
-        if not self.post_warnings:
-            return "Warnings are not being posted to this channel, enable post_warnings in the channel config."
+        if not self.send_warnings:
+            return "Warnings are not being sent to this channel, enable send_warnings in the channel config."
         if not color:
             color = self.colors["warning"]
         response = self.message(title, warnings, color)
@@ -146,8 +146,8 @@ class Slack:
         :param color: None
         :return: response
         """
-        if not self.post_errors:
-            return "Errors are not being posted to this channel, enable post_errors in the channel config."
+        if not self.send_errors:
+            return "Errors are not being sent to this channel, enable send_errors in the channel config."
         if not color:
             color = self.colors["danger"]
         response = self.message(title, errors, color)
@@ -170,7 +170,7 @@ class Slack:
 
         if self.filter_messages:
             messages, filtered = self._filter_messages(messages)
-            if len(filtered) > 0 and self.post_warnings:
+            if len(filtered) > 0 and self.send_warnings:
                 filter_message = []
                 for filtered_message in filtered:
                     filter_message.append("Filtered character {} from message".format(repr(filtered_message)))
@@ -188,6 +188,6 @@ class Slack:
         payload = self._build(title, messages, color)
         response = self._send(payload)
 
-        if not self._validate_response(response) and self.post_errors:
+        if not self._validate_response(response) and self.send_errors:
             self.message("Error sending messages:", messages)
         return response
