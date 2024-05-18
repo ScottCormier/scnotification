@@ -2,6 +2,7 @@ Channels:
   Default:
     url: &url "{INCOMING WEBHOOKS URL}"
     attributes: &attributes
+      name: "Default"
       verbose: False # Verbose toggle, used for validating if all messages should be sent
       send_errors: False # Error toggle, used to control if errors should be sent
       send_warnings: False # Warning toggle, used to control if warnings should be sent
@@ -15,10 +16,10 @@ Channels:
       filters: &filters [ "{}", "\n", "sync" ] # Filter list, list of messages to ignore
 
   # Example of implementing a slack channel, with just the defaults
-  Sync:
-    url: *url
+  ScSync:
     attributes:
       <<: *attributes
+      name: "ScSync"
       colors:
         <<: *colors
       filters: *filters
@@ -41,6 +42,19 @@ Channels:
     url: "{DIFFERENT INCOMING WEBHOOKS URL}"
     attributes:
       <<: *attributes
+      verbose: False
+      send_errors: True
+      send_warnings: True
+      colors:
+        <<: *colors
+      filters: *filters
+
+  # Example of a slack channel with attribute overrides
+  ScFiles:
+    url: *url
+    attributes:
+      <<: *attributes
+      name: "ScFiles"
       verbose: False
       send_errors: True
       send_warnings: True
