@@ -3,7 +3,7 @@ import random
 from slack import Notify
 
 # Initialize the notification and set what channel to send to
-notify = Notify(channel="MayaServer")
+notify = Notify(channel="Default")
 
 
 def basic_usage():
