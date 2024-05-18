@@ -8,6 +8,7 @@ class Config:
     def __init__(self):
         self.config_path = "{}/config/slack.yaml".format(os.path.dirname(__file__))
         loaded_config = self._load_file(self.config_path)
+        self.channels = loaded_config["Channels"].keys()
         self._contents = loaded_config["Channels"]
 
     def _load_file(self, config_file):
@@ -20,7 +21,7 @@ class Config:
 
 
 class Notify(Config):
-    def __init__(self, channel=None):
+    def __init__(self, channel=None, broadcast=False):
         if not channel:
             channel = "Default"
         super(Notify, self).__init__()
@@ -37,4 +38,5 @@ class Notify(Config):
 
 if __name__ == "__main__":
     config = Notify("ScFiles")
+    loaded = config.get_config()
     print(config.channels)

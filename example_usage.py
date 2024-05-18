@@ -1,6 +1,6 @@
 import random
 
-from slack import Notify
+from src.slack import Notify
 
 # Initialize the notification and set what channel to send to
 notify = Notify(channel="Default")
