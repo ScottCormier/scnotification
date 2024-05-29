@@ -4,7 +4,6 @@ import requests
 class Send:
     def __init__(self, config):
         super(Send, self).__init__()
-
         self.url = config["url"]
         self.headers = {'Content-Type': 'application/json'}
 
